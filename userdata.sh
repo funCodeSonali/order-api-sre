@@ -28,7 +28,7 @@ cd /home/ubuntu
 
 git clone https://github.com/funCodeSonali/order-api-sre.git
 
-cd order-api-sre/k8
+cd order-api-sre/k8s
 
 echo "===== Deploy Namespace ====="
 kubectl apply -f 00-namespace.yaml
