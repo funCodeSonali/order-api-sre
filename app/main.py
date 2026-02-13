@@ -1,5 +1,5 @@
-from fastapi import FastAPI, HTTPException
-from prometheus_client import Counter, Histogram, generate_latest
+from fastapi import FastAPI, HTTPException, Response
+from prometheus_client import Counter, Histogram, generate_latest, CONTENT_TYPE_LATEST
 import random
 import time
 
@@ -61,4 +61,7 @@ def create_order():
 
 @app.get("/metrics")
 def metrics():
-    return generate_latest()
+    return Response(
+        content=generate_latest(),
+        media_type=CONTENT_TYPE_LATEST
+    )
