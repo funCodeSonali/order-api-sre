@@ -28,6 +28,19 @@ chmod 644 /etc/rancher/k3s/k3s.yaml
 echo "===== Wait for cluster ====="
 sleep 30
 
+echo "===== Install Helm ====="
+curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+
+echo "===== Add Helm Repo ====="
+helm repo add traefik https://traefik.github.io/charts
+helm repo update
+
+echo "===== Install Traefik Ingress ====="
+helm install traefik traefik/traefik \
+  --namespace kube-system \
+  --create-namespace \
+  --kubeconfig /etc/rancher/k3s/k3s.yaml
+
 echo "===== Install Git ====="
 apt install -y git
 
