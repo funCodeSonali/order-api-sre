@@ -1,0 +1,11 @@
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: sre-strip-prefix
+  namespace: sre-demo
+spec:
+  stripPrefix:
+    prefixes:
+      - /api
+      - /prometheus
+      - /grafana

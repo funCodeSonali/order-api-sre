@@ -25,21 +25,25 @@ echo "===== Configure kubeconfig ====="
 export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
 chmod 644 /etc/rancher/k3s/k3s.yaml
 
+# Install Traefik CRDs
+kubectl apply -f https://raw.githubusercontent.com/traefik/traefik/v2.10/docs/content/reference/dynamic-configuration/kubernetes-crd-definition-v1.yml
+kubectl apply -f https://raw.githubusercontent.com/traefik/traefik/v2.10/docs/content/reference/dynamic-configuration/kubernetes-crd-rbac.yml
+
 echo "===== Wait for cluster ====="
 sleep 30
 
-echo "===== Install Helm ====="
-curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+# echo "===== Install Helm ====="
+# curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 
-echo "===== Add Helm Repo ====="
-helm repo add traefik https://traefik.github.io/charts
-helm repo update
+# echo "===== Add Helm Repo ====="
+# helm repo add traefik https://traefik.github.io/charts
+# helm repo update
 
-echo "===== Install Traefik Ingress ====="
-helm install traefik traefik/traefik \
-  --namespace kube-system \
-  --create-namespace \
-  --kubeconfig /etc/rancher/k3s/k3s.yaml
+# echo "===== Install Traefik Ingress ====="
+# helm install traefik traefik/traefik \
+#   --namespace kube-system \
+#   --create-namespace \
+#   --kubeconfig /etc/rancher/k3s/k3s.yaml
 
 echo "===== Install Git ====="
 apt install -y git
@@ -61,6 +65,9 @@ kubectl apply -f app/
 
 echo "===== Deploy Monitoring Stack ====="
 kubectl apply -f monitoring/
+
+echo "===== Deploy Middleware ====="
+kubectl apply -f middleware.yaml
 
 echo "===== Deploy Ingress ====="
 kubectl apply -f ingress.yaml
