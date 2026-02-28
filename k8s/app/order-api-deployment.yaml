@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
         - name: order-api
-          image: ghcr.io/funcodesonali/order-api-sre/order-api:latest
+          image: ghcr.io/funcodesonali/order-api-sre/order-api:0754ce5
           ports:
             - containerPort: 8000
