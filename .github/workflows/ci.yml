@@ -26,10 +26,16 @@ jobs:
         run: |
           echo "REPO_LOWER=${GITHUB_REPOSITORY,,}" >> $GITHUB_ENV
 
+      - name: Set short SHA
+        run: echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
+
       - uses: docker/build-push-action@v5
         with:
           context: .
           push: true
           tags: |
-            ghcr.io/${{ env.REPO_LOWER }}/order-api:${{ github.sha }}
+            ghcr.io/${{ env.REPO_LOWER }}/order-api:${{ env.SHORT_SHA }}
             ghcr.io/${{ env.REPO_LOWER }}/order-api:latest
+          labels: |
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
