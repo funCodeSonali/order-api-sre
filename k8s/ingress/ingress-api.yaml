@@ -13,6 +13,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: order-api
+                name: order-api-service
                 port:
                   number: 80
