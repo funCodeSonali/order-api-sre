@@ -24,10 +24,23 @@ curl -sfL https://get.k3s.io | sh -
 echo "===== Configure kubeconfig ====="
 export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
 chmod 644 /etc/rancher/k3s/k3s.yaml
+echo 'export KUBECONFIG=/etc/rancher/k3s/k3s.yaml' >> /home/ubuntu/.bashrc
 
-# Install Traefik CRDs
-kubectl apply -f https://raw.githubusercontent.com/traefik/traefik/v2.10/docs/content/reference/dynamic-configuration/kubernetes-crd-definition-v1.yml
-kubectl apply -f https://raw.githubusercontent.com/traefik/traefik/v2.10/docs/content/reference/dynamic-configuration/kubernetes-crd-rbac.yml
+# echo "===== Wait for Kubernetes API ====="
+# until kubectl get nodes >/dev/null 2>&1; do
+#   echo "Waiting for Kubernetes API..."
+#   sleep 5
+# done
+
+# echo "===== Wait for Node Ready ====="
+# kubectl wait --for=condition=Ready node --all --timeout=180s
+
+# echo "===== Wait for Traefik CRDs ====="
+# kubectl wait --for condition=established crd/middlewares.traefik.io --timeout=180s
+
+# # Install Traefik CRDs
+# kubectl apply -f https://raw.githubusercontent.com/traefik/traefik/v2.10/docs/content/reference/dynamic-configuration/kubernetes-crd-definition-v1.yml
+# kubectl apply -f https://raw.githubusercontent.com/traefik/traefik/v2.10/docs/content/reference/dynamic-configuration/kubernetes-crd-rbac.yml
 
 echo "===== Wait for cluster ====="
 sleep 30
@@ -51,7 +64,9 @@ apt install -y git
 echo "===== Clone Repository ====="
 cd /home/ubuntu
 
-git clone https://github.com/funCodeSonali/order-api-sre.git
+if [ ! -d "order-api-sre" ]; then
+  git clone https://github.com/funCodeSonali/order-api-sre.git
+fi
 
 cd order-api-sre/k8s
 
@@ -70,7 +85,7 @@ echo "===== Deploy Middleware ====="
 kubectl apply -f middleware.yaml
 
 echo "===== Deploy Ingress ====="
-kubectl apply -f ingress.yaml
+kubectl apply -f ingress/
 
 echo "===== Final Pod Status ====="
 kubectl get pods -n sre-demo
