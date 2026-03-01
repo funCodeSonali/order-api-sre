@@ -27,3 +27,19 @@ spec:
               value: "%(protocol)s://%(domain)s/grafana"
             - name: GF_SERVER_SERVE_FROM_SUB_PATH
               value: "true"
+            - name: GF_PATHS_PROVISIONING
+              value: /etc/grafana/provisioning
+          volumeMounts:
+            - name: grafana-dashboards
+              mountPath: /var/lib/grafana/dashboards
+              readOnly: true
+            - name: grafana-provisioning
+              mountPath: /etc/grafana/provisioning
+              readOnly: true
+      volumes:
+        - name: grafana-dashboards
+          configMap:
+            name: grafana-dashboards-config   # ConfigMap with order-api-dashboard.json
+        - name: grafana-provisioning
+          configMap:
+            name: grafana-provisioning-config # ConfigMap with dashboards.yml & datasource.yml

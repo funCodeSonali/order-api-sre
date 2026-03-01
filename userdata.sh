@@ -75,6 +75,13 @@ kubectl apply -f middleware.yaml
 echo "===== Deploy Ingress ====="
 kubectl apply -f ingress/
 
+echo "===== Add Config Map for Grafana ====="
+kubectl -n sre-demo create configmap grafana-dashboards-config \
+  --from-file=monitoring/grafana/dashboards/
+
+kubectl -n sre-demo create configmap grafana-provisioning-config \
+  --from-file=monitoring/grafana/provisioning/
+
 echo "===== Final Pod Status ====="
 kubectl get pods -n sre-demo
 
