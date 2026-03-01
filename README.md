@@ -42,14 +42,13 @@ kubectl apply -f k8s/app/
 kubectl apply -f k8s/monitoring/
 kubectl apply -f k8s/middleware.yaml
 kubectl apply -f k8s/ingress/
-```bash
+```
 
 2. **Ensure all pods are running**
 
 ```bash
 kubectl get pods -n sre-demo
-```bash
-
+```
 
 ## Order-API Application
 
