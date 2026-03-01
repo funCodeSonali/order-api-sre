@@ -30,7 +30,7 @@ def create_order():
     processing_time = random.uniform(0.1, 0.6)
     time.sleep(processing_time)
 
-    if random.random() < 0.05:
+    if random.random() < 0.01:
         REQUEST_COUNT.labels(
             method="POST",
             endpoint="/order",
