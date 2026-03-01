@@ -1,0 +1,41 @@
+apiVersion: flagger.app/v1beta1
+kind: Canary
+metadata:
+  name: order-api
+  namespace: sre-demo
+spec:
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: order-api
+
+  service:
+    port: 80
+
+  analysis:
+    interval: 30s
+    threshold: 3
+    maxWeight: 50
+    stepWeight: 10
+
+    metrics:
+      - name: error-rate
+        thresholdRange:
+          max: 2
+        interval: 30s
+        query: |
+          100 - (
+            sum(rate(http_requests_total{status!~"5.."}[1m]))
+            /
+            sum(rate(http_requests_total[1m]))
+          ) * 100
+
+      - name: latency
+        thresholdRange:
+          max: 500
+        interval: 30s
+        query: |
+          histogram_quantile(
+            0.95,
+            sum(rate(http_request_latency_seconds_bucket[1m])) by (le)
+          )

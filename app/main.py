@@ -5,7 +5,7 @@ import time
 
 app = FastAPI()
 
-APP_VERSION = "v1"
+APP_VERSION = "v2"
 
 REQUEST_COUNT = Counter(
     "http_requests_total",
